@@ -14,6 +14,11 @@ var (
 	addr   = "127.0.0.1:50051"
 	cli    *client.GrpcClient
 	wallet api.WalletClient
+
+	// 主账户
+	OWNER_ADDRESS = "TPL66VK2gCXNCD7EJg9pgJRfqcRazjhUZY"
+	// 测试账户 TronLink
+	TEST_ADDRESS = "TUDvBGVduVgAjKpApbsMstmDtJjT7HgkUY"
 )
 
 func TestMain(t *testing.M) {

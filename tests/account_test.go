@@ -2,30 +2,23 @@ package tests
 
 import (
 	"context"
-	"fmt"
 	"testing"
 
 	"github.com/fbsobreira/gotron-sdk/pkg/proto/api"
+	"github.com/fbsobreira/gotron-sdk/pkg/proto/core"
 	// "github.com/fbsobreira/gotron-sdk/pkg/keystore"
 )
 
-const (
-	OWNER_ADDRESS = "TUDvBGVduVgAjKpApbsMstmDtJjT7HgkUY"
-)
-
-func TestGenerateAddress(t *testing.T) {
+func testGenerateAddress(t *testing.T) *api.AddressPrKeyPairMessage {
 	address, err := wallet.GenerateAddress(context.Background(), &api.EmptyMessage{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	fmt.Println(address)
+	return address
 }
 
 func TestCreateAccount(t *testing.T) {
-	address, err := wallet.GenerateAddress(context.Background(), &api.EmptyMessage{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	address := testGenerateAddress(t)
 	transactionExtention, err := cli.CreateAccount(OWNER_ADDRESS, address.GetAddress())
 	if err != nil {
 		t.Fatal(err)
@@ -34,10 +27,22 @@ func TestCreateAccount(t *testing.T) {
 }
 
 func TestGetAccount(t *testing.T) {
-	account, err := cli.GetAccount("TUDvBGVduVgAjKpApbsMstmDtJjT7HgkUY")
+	account, err := cli.GetAccount(TEST_ADDRESS)
 	if err != nil {
 		t.Fatal(err)
 	}
 	t.Log(account.String())
 	t.Log(account.GetType(), account.Balance)
+}
+
+func TestCreateTransaction(t *testing.T) {
+	transaction, err := wallet.CreateTransaction(context.Background(), &core.TransferContract{
+		OwnerAddress: []byte(OWNER_ADDRESS),
+		ToAddress:    []byte(TEST_ADDRESS),
+		Amount:       100,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(transaction)
 }
