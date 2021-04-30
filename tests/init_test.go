@@ -15,6 +15,7 @@ var (
 	cli    *client.GrpcClient
 	wallet api.WalletClient
 
+	OWNER_PRIVATE = "da146374a75310b9666e834ee4ad0866d6f4035967bfc76217c5a495fff9f0d0"
 	// 主账户
 	OWNER_ADDRESS = "TPL66VK2gCXNCD7EJg9pgJRfqcRazjhUZY"
 	// 测试账户 TronLink

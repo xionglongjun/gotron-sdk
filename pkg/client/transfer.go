@@ -24,7 +24,6 @@ func (g *GrpcClient) Transfer(from, toAddress string, amount int64) (*api.Transa
 
 	ctx, cancel := g.getContext()
 	defer cancel()
-
 	tx, err := g.Client.CreateTransaction2(ctx, contract)
 	if err != nil {
 		return nil, err

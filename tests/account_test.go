@@ -2,6 +2,7 @@ package tests
 
 import (
 	"context"
+	"os"
 	"testing"
 
 	"github.com/fbsobreira/gotron-sdk/pkg/proto/api"
@@ -31,11 +32,11 @@ func TestGetAccount(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(account.String())
+	t.Log(string(account.GetAddress()), account)
 	t.Log(account.GetType(), account.Balance)
 }
 
-func TestCreateTransaction(t *testing.T) {
+func testCreateTransaction(t *testing.T) *core.Transaction {
 	transaction, err := wallet.CreateTransaction(context.Background(), &core.TransferContract{
 		OwnerAddress: []byte(OWNER_ADDRESS),
 		ToAddress:    []byte(TEST_ADDRESS),
@@ -43,6 +44,28 @@ func TestCreateTransaction(t *testing.T) {
 	})
 	if err != nil {
 		t.Fatal(err)
+		os.Exit(0)
 	}
-	t.Log(transaction)
+	return transaction
+}
+
+func TestBroadcastTransaction(t *testing.T) {
+	transaction, err := wallet.BroadcastTransaction(context.Background(), testCreateTransaction(t))
+	if err != nil {
+		t.Fatal(err)
+		os.Exit(0)
+	}
+	t.Log(transaction, "转账返回")
+}
+
+func TestEasyTransferByPrivate(t *testing.T) {
+	transaction, err := wallet.EasyTransferByPrivate(context.Background(), &api.EasyTransferByPrivateMessage{
+		PrivateKey: []byte("41928C9AF0651632157EF27A2CF17CA72C575A4D21"),
+		ToAddress:  []byte(TEST_ADDRESS),
+	})
+	if err != nil {
+		t.Error(err)
+		t.Fatal(err)
+	}
+	t.Log(transaction, "转账返回")
 }
